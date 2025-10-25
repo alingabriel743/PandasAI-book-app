@@ -1,0 +1,18 @@
+# Core dependencies
+streamlit>=1.28.0
+pandas>=2.0.0
+pandasai>=2.0.0
+
+# OpenAI and API
+openai>=1.0.0
+
+# Visualization
+plotly>=5.17.0
+matplotlib>=3.7.0
+
+# Scientific computing
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Additional utilities
+python-dotenv>=1.0.0

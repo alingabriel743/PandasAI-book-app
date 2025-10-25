@@ -1,0 +1,6 @@
+venv/
+cache/
+exports/
+__pycache__/
+pandasai.log
+.DS_Store
