@@ -8,11 +8,19 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.data_loader import load_data, get_column_info
 from utils.config import get_agent
 from utils.auth import require_api_key, get_selected_model
+from utils.ui import setup_page, render_header, render_footer
 
-st.set_page_config(page_title="Chat cu PandasAI", page_icon="🤖", layout="wide")
+# Setup page
+setup_page(
+    title="Chat cu PandasAI",
+    icon="🤖",
+    layout="wide"
+)
 
-st.title("🤖 Chat cu PandasAI")
-st.markdown("Pune întrebări în limbaj natural despre datele economice")
+render_header(
+    title="🤖 Chat cu PandasAI",
+    description="Pune întrebări în limbaj natural despre datele economice"
+)
 
 # Require API key authentication
 api_key = require_api_key()
@@ -30,21 +38,21 @@ if "agent" not in st.session_state:
         st.session_state.agent = get_agent(df, api_key, get_selected_model())
 
 # Display dataset info
-with st.expander("📊 Informații despre Dataset"):
+with st.expander("📊 Informații despre dataset"):
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Total Înregistrări", len(df))
+        st.metric("Total înregistrări", len(df))
     with col2:
         st.metric("Țări", df['Country'].nunique())
     with col3:
         st.metric("Ani", f"{df['Year'].min()}-{df['Year'].max()}")
     
-    st.subheader("Coloane Disponibile:")
+    st.subheader("Coloane disponibile:")
     for col, info in column_info.items():
         st.write(f"**{col}**: {info['description']}")
 
 # Example queries
-st.subheader("💡 Exemple de Întrebări")
+st.subheader("💡 Exemple de întrebări")
 st.markdown("""
 Poți pune orice întrebare despre date în limbaj natural. Iată câteva exemple:
 """)
@@ -160,19 +168,19 @@ if prompt := st.chat_input("Pune o întrebare despre date...") or st.session_sta
 
 # Clear chat button
 if st.session_state.messages:
-    if st.button("🗑️ Șterge Conversația", type="secondary"):
+    if st.button("🗑️ Șterge conversația", type="secondary"):
         st.session_state.messages = []
         st.rerun()
 
 # Tips section
 st.markdown("---")
-st.subheader("💡 Sfaturi pentru Întrebări Eficiente")
+st.subheader("💡 Sfaturi pentru întrebări eficiente")
 
 with st.expander("Cum să pui întrebări bune"):
     st.markdown("""
     ### Tipuri de întrebări pe care le poți pune:
     
-    **1. Întrebări Statistice:**
+    **1. Întrebări statistice:**
     - "Care este media/mediana/suma pentru [indicator] în [țară]?"
     - "Care este valoarea maximă/minimă pentru [indicator]?"
     
@@ -180,7 +188,7 @@ with st.expander("Cum să pui întrebări bune"):
     - "Compară [indicator] între [țară1] și [țară2]"
     - "Care țară are cel mai mare/mic [indicator]?"
     
-    **3. Analize Temporale:**
+    **3. Analize temporale:**
     - "Arată evoluția [indicator] pentru [țară] între [an1] și [an2]"
     - "Care a fost creșterea [indicator] pentru [țară]?"
     
@@ -192,7 +200,7 @@ with st.expander("Cum să pui întrebări bune"):
     - "Creează un grafic cu [indicator] pentru toate țările"
     - "Arată-mi un chart cu evoluția [indicator]"
     
-    **6. Filtrări și Sortări:**
+    **6. Filtrări și sortări:**
     - "Arată-mi top 5 ani cu cel mai mare [indicator]"
     - "Filtrează datele pentru [țară] după anul [an]"
     
@@ -222,10 +230,10 @@ with st.expander("🤖 Despre PandasAI"):
     
     ### Capabilități:
     
-    - **Procesare Limbaj Natural**: Înțelege întrebări complexe în limbaj natural
-    - **Analiză Automată**: Efectuează calcule și analize statistice automat
-    - **Generare Vizualizări**: Creează grafice și chart-uri relevante
-    - **Răspunsuri Contextuale**: Oferă răspunsuri bazate pe contextul datelor
+    - **Procesare limbaj natural**: Înțelege întrebări complexe în limbaj natural
+    - **Analiză automată**: Efectuează calcule și analize statistice automat
+    - **Generare vizualizări**: Creează grafice și chart-uri relevante
+    - **Răspunsuri contextuale**: Oferă răspunsuri bazate pe contextul datelor
     
     ### Cum funcționează:
     
@@ -241,3 +249,5 @@ with st.expander("🤖 Despre PandasAI"):
     - Poate necesita reformulări pentru întrebări complexe
     - Limitată de capabilitățile modelului AI folosit
     """)
+
+render_footer()

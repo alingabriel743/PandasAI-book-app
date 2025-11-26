@@ -76,7 +76,7 @@ class OpenRouterLLM(BaseOpenAI):
     def type(self) -> str:
         return "openrouter"
 
-def get_agent(df, api_key, model="qwen/qwen-2.5-72b-instruct:free"):
+def get_agent(df, api_key, model="x-ai/grok-4.1-fast:free"):
     """Create and return a PandasAI agent"""
     llm = OpenRouterLLM(
         api_token=api_key,
@@ -104,7 +104,7 @@ def test_openrouter_connection(api_key):
                 "HTTP-Referer": "https://pandasai-app.com",
                 "X-Title": "PandasAI App",
             },
-            model="qwen/qwen-2.5-72b-instruct:free",
+            model="x-ai/grok-4.1-fast:free",
             messages=[
                 {
                     "role": "user",

@@ -5,251 +5,142 @@ import os
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from utils.auth import show_api_key_input
+from utils.ui import setup_page, render_footer, render_feature_card
 
-# Configurare pagină
-st.set_page_config(
-    page_title="Explorare Date Economice cu PandasAI",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
+# Setup page with custom styles
+# Setup page with custom styles
+setup_page(
+    title="Explorare date economice cu PandasAI",
+    icon="📊",
+    layout="wide"
 )
 
 # Show API key input in sidebar
 show_api_key_input()
 
-# Pagina principală
-st.title("📊 Explorare Date Economice cu PandasAI")
-
+# Hero Section
 st.markdown("""
-### Bine ați venit la aplicația demonstrativă PandasAI!
+<div class="hero-section">
+    <div class="hero-title">📊 Explorare date economice cu PandasAI</div>
+    <div class="hero-subtitle">
+        O platformă interactivă pentru analiza datelor economice din Europa de Sud-Est (1990-2023)
+        folosind puterea AI generativ.
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-Această aplicație este concepută pentru a demonstra **capacitățile avansate ale PandasAI** 
-în analiza datelor economice din România, Bulgaria, Turcia și Grecia (1990-2023).
-
----
-""")
-
-# Main content in columns
+# Main content
 col1, col2 = st.columns([2, 1])
 
 with col1:
+    st.markdown("### 🤖 Ce este PandasAI?")
     st.markdown("""
-    ### 🤖 Ce este PandasAI?
+    <div style="background-color: white; padding: 20px; border-radius: 10px; border-left: 5px solid #007bff; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <p style="font-size: 1.1rem; line-height: 1.6;">
+        <strong>PandasAI</strong> este o bibliotecă Python revoluționară care adaugă capabilități de 
+        <strong>AI generativ</strong> la pandas DataFrames. Această aplicație demonstrează cum poți:
+        </p>
+        <ul style="list-style-type: none; padding-left: 0;">
+            <li style="margin-bottom: 10px;">💬 <strong>Interacționa în limbaj natural</strong> cu datele tale</li>
+            <li style="margin-bottom: 10px;">📊 <strong>Genera vizualizări automate</strong> instantaneu</li>
+            <li style="margin-bottom: 10px;">🔍 <strong>Descoperi insights ascunse</strong> fără a scrie cod complex</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
     
-    **PandasAI** este o bibliotecă Python revoluționară care adaugă capabilități de 
-    **AI generativ** la pandas DataFrames. Permite utilizatorilor să:
-    
-    - 💬 **Pună întrebări în limbaj natural** despre date
-    - 📊 **Genereze automat vizualizări** relevante
-    - 🔍 **Efectueze analize complexe** fără cod
-    - 📈 **Obțină insights** instant din date
-    
-    ### 📚 Despre Dataset
-    
-    Dataset-ul conține **indicatori economici** pentru 4 țări din Europa de Sud-Est:
-    
-    | Indicator | Descriere | Unitate |
-    |-----------|-----------|---------|
-    | **GDP** | Produsul Intern Brut per capita | USD |
-    | **FDI** | Foreign Direct Investment | % din PIB |
-    | **IU** | Internet Users | % din populație |
-    | **MCS** | Mobile Cellular Subscriptions | per 100 persoane |
-    | **PA** | Patent Applications | număr |
-    | **EF** | Economic Freedom Index | index |
-    
-    **Perioada**: 1990-2023 | **Țări**: România, Bulgaria, Turcia, Grecia
+    st.markdown("### 📚 Despre dataset")
+    st.markdown("""
+    Dataset-ul acoperă perioada **1990-2023** pentru **România, Bulgaria, Turcia și Grecia**.
+    Include indicatori cheie precum:
     """)
+    
+    # Dataset indicators as pills/badges
+    indicators = [
+        ("GDP", "Produs intern brut", "💰"),
+        ("FDI", "Investiții străine", "🌍"),
+        ("Internet Users", "Digitalizare", "💻"),
+        ("Mobile Subs", "Conectivitate", "📱"),
+        ("Patents", "Inovație", "💡"),
+        ("Economic Freedom", "Libertate ec.", "⚖️")
+    ]
+    
+    cols = st.columns(3)
+    for idx, (code, name, icon) in enumerate(indicators):
+        with cols[idx % 3]:
+            st.markdown(f"""
+            <div style="text-align: center; padding: 10px; background: white; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee;">
+                <div style="font-size: 1.5rem;">{icon}</div>
+                <div style="font-weight: bold;">{code}</div>
+                <div style="font-size: 0.8rem; color: #666;">{name}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 with col2:
+    st.markdown("### 🚀 Start rapid")
+    
+    steps = [
+        ("1", "Obține API key", "Gratuit de la OpenRouter.ai"),
+        ("2", "Configurează", "Introdu cheia în meniul lateral"),
+        ("3", "Explorează", "Alege o pagină din meniu")
+    ]
+    
+    for num, title, desc in steps:
+        st.markdown(f"""
+        <div style="display: flex; align-items: center; margin-bottom: 15px; background: white; padding: 10px; border-radius: 8px;">
+            <div style="background: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px;">{num}</div>
+            <div>
+                <div style="font-weight: bold;">{title}</div>
+                <div style="font-size: 0.8rem; color: #666;">{desc}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     st.info("""
-    ### 🚀 Start Rapid
-    
-    1. **Obține API Key**
-       - Vizitează [OpenRouter.ai](https://openrouter.ai/)
-       - Creează cont gratuit
-       - Generează API key
-    
-    2. **Explorează Paginile**
-       - 🤖 Chat cu PandasAI
-       - 🔍 Analiză Avansată
-       - 📋 Galerie Exemple
-    
-    3. **Pune Întrebări**
-       - Folosește limbaj natural
-       - Cere vizualizări
-       - Explorează relații
-    """)
-    
-    st.success("""
-    ### ✨ Caracteristici
-    
-    ✅ Analiză în limbaj natural  
-    ✅ Vizualizări automate  
-    ✅ Statistici avansate  
-    ✅ Corelații și tendințe  
-    ✅ Comparații complexe  
-    ✅ Exemple practice  
+    **Sfat:** Începe cu pagina "Explorare generală" pentru a te familiariza cu datele, apoi încearcă "Chat cu PandasAI"!
     """)
 
 st.markdown("---")
 
-# Features showcase
-st.header("🎯 Funcționalități Principale")
+# Features showcase with new card design
+st.header("🎯 Funcționalități principale")
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📈 Explorare Generală", 
-    "🤖 Chat Inteligent", 
-    "🔍 Analiză Avansată", 
-    "📋 Exemple Practice"
-])
-
-with tab1:
-    st.markdown("""
-    ### 📈 Explorare Generală a Datelor
-    
-    Vizualizează și explorează dataset-ul folosind:
-    - **Statistici descriptive** pentru toți indicatorii
-    - **Grafice interactive** pentru evoluții temporale
-    - **Comparații vizuale** între țări
-    - **Filtre dinamice** pentru perioade și indicatori
-    
-    👉 **Pagină**: Explorare Generală
-    """)
-
-with tab2:
-    st.markdown("""
-    ### 🤖 Chat cu PandasAI
-    
-    Pune întrebări în **limbaj natural** și primește răspunsuri instant:
-    
-    **Exemple de întrebări:**
-    - "Care este media GDP pentru România?"
-    - "Compară Internet Users între toate țările în 2023"
-    - "Creează un grafic cu evoluția FDI pentru Bulgaria"
-    - "Care țară are cea mai mare creștere a Patent Applications?"
-    
-    👉 **Pagină**: Chat cu PandasAI
-    """)
-
-with tab3:
-    st.markdown("""
-    ### 🔍 Analiză Avansată cu PandasAI
-    
-    Efectuează analize complexe organizate pe categorii:
-    
-    - **Statistici Descriptive**: Media, mediana, deviație standard
-    - **Corelații și Relații**: Identifică dependențe între variabile
-    - **Analiză Comparativă**: Compară țări și perioade
-    - **Predicții și Tendințe**: Identifică pattern-uri temporale
-    - **Analiză Complexă**: Întrebări multi-dimensionale
-    
-    👉 **Pagină**: Analiză cu PandasAI
-    """)
-
-with tab4:
-    st.markdown("""
-    ### 📋 Galerie Exemple PandasAI
-    
-    Explorează **peste 24 de exemple practice** organizate pe categorii:
-    
-    - 🔢 **Calcule Simple**: Media, maxim, count
-    - 📊 **Agregări și Grupări**: Group by, sum, average
-    - 📈 **Analiză Temporală**: Evoluții, rate de creștere
-    - 🔗 **Corelații**: Relații între variabile
-    - ⚖️ **Comparații**: Rankings, diferențe
-    - 📉 **Vizualizări**: Grafice automate
-    - 🔍 **Filtrări Complexe**: Condiții multiple
-    - 🧮 **Calcule Avansate**: Statistici descriptive
-    
-    👉 **Pagină**: Exemple PandasAI
-    """)
-
-st.markdown("---")
-
-# Why PandasAI section
-st.header("💡 De Ce PandasAI?")
-
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown("""
-    ### 🎯 Accesibilitate
-    
-    - **Fără cod**: Nu necesită cunoștințe de programare
-    - **Limbaj natural**: Întrebări în română/engleză
-    - **Intuitiv**: Interface prietenoasă
-    - **Rapid**: Rezultate instant
-    """)
+    st.markdown(render_feature_card(
+        "📈", 
+        "Explorare generală", 
+        "Statistici descriptive, grafice interactive și filtre dinamice pentru o privire de ansamblu.",
+        "Mergi la pagină",
+        "/Explorare_Generala"
+    ), unsafe_allow_html=True)
 
 with col2:
-    st.markdown("""
-    ### 🚀 Productivitate
-    
-    - **Automatizare**: Generează cod automat
-    - **Vizualizări**: Chart-uri relevante
-    - **Flexibilitate**: Adaptare la context
-    - **Eficiență**: Analize complexe simplificate
-    """)
+    st.markdown(render_feature_card(
+        "🤖", 
+        "Chat inteligent", 
+        "Pune întrebări în limbaj natural și primește răspunsuri și vizualizări instant.",
+        "Mergi la pagină",
+        "/Chat_cu_PandasAI"
+    ), unsafe_allow_html=True)
 
 with col3:
-    st.markdown("""
-    ### 🔬 Capabilități
-    
-    - **Statistici**: Calcule avansate
-    - **ML Integration**: Predicții și pattern-uri
-    - **Multi-format**: Text, tabele, grafice
-    - **Contextual**: Înțelege intenția
-    """)
+    st.markdown(render_feature_card(
+        "🔍", 
+        "Analiză avansată", 
+        "Corelații, predicții, comparații complexe și analiză statistică detaliată.",
+        "Mergi la pagină",
+        "/Analiza_cu_PandasAI"
+    ), unsafe_allow_html=True)
 
-st.markdown("---")
-
-# Getting started guide
-with st.expander("📖 Ghid de Utilizare Rapidă"):
-    st.markdown("""
-    ### Pași pentru a Începe:
-    
-    #### 1. Configurare Inițială
-    ```
-    1. Obține un API Key gratuit de la OpenRouter.ai
-    2. Introdu API Key-ul în bara laterală a oricărei pagini
-    3. Așteaptă confirmarea conexiunii
-    ```
-    
-    #### 2. Explorare Dataset
-    ```
-    - Mergi la "Explorare Generală" pentru o privire de ansamblu
-    - Vizualizează statistici și grafice interactive
-    - Filtrează date după țări și perioade
-    ```
-    
-    #### 3. Interacțiune cu PandasAI
-    ```
-    - Accesează "Chat cu PandasAI"
-    - Scrie întrebări în limbaj natural
-    - Primește răspunsuri și vizualizări automate
-    ```
-    
-    #### 4. Învățare prin Exemple
-    ```
-    - Explorează "Exemple PandasAI"
-    - Rulează exemple predefinite
-    - Înțelege diferite tipuri de analize
-    ```
-    
-    #### 5. Analiză Avansată
-    ```
-    - Folosește "Analiză cu PandasAI"
-    - Selectează categoria de analiză
-    - Explorează capabilități complexe
-    ```
-    """)
+with col4:
+    st.markdown(render_feature_card(
+        "📋", 
+        "Exemple practice", 
+        "O galerie de peste 24 de exemple gata de rulat pentru a învăța rapid.",
+        "Mergi la pagină",
+        "/Exemple_PandasAI"
+    ), unsafe_allow_html=True)
 
 # Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center'>
-    <p><strong>Aplicație Demonstrativă PandasAI</strong></p>
-    <p>Construit cu ❤️ folosind PandasAI, Streamlit și OpenRouter</p>
-    <p><em>Dezvoltat pentru capitolul de carte despre PandasAI</em></p>
-</div>
-""", unsafe_allow_html=True)
+render_footer()

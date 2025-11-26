@@ -8,7 +8,7 @@ def init_session_state():
     if "api_key_valid" not in st.session_state:
         st.session_state.api_key_valid = False
     if "selected_model" not in st.session_state:
-        st.session_state.selected_model = "qwen/qwen-2.5-72b-instruct:free"
+        st.session_state.selected_model = "x-ai/grok-4.1-fast:free"
 
 def show_api_key_input():
     """Show API key input in sidebar if not authenticated"""
@@ -24,7 +24,7 @@ def show_api_key_input():
             help="Introdu API Key-ul tău OpenRouter pentru a debloca toate funcționalitățile"
         )
         
-        if st.sidebar.button("🔓 Validează API Key", type="primary"):
+        if st.sidebar.button("🔓 Validează API key", type="primary"):
             if api_key_input:
                 with st.spinner("Validez API Key-ul..."):
                     success, message = test_openrouter_connection(api_key_input)
@@ -42,7 +42,7 @@ def show_api_key_input():
                 st.sidebar.warning("Te rog introdu un API Key")
         
         st.sidebar.info("""
-        ### 🔑 Cum obții API Key:
+        ### 🔑 Cum obții API key:
         
         1. Vizitează [OpenRouter.ai](https://openrouter.ai/)
         2. Creează cont gratuit
@@ -59,10 +59,10 @@ def show_api_key_input():
         
         # Model selection
         st.sidebar.markdown("---")
-        st.sidebar.subheader("🤖 Selectare Model")
+        st.sidebar.subheader("🤖 Selectare model")
         
         model_options = {
-            "Qwen2.5 72B Instruct": "qwen/qwen-2.5-72b-instruct:free",
+            "Grok 4.1 Fast (xAI)": "x-ai/grok-4.1-fast:free",
             "Meta: Llama 3.3 70B Instruct": "meta-llama/llama-3.3-70b-instruct:free"
         }
         
@@ -112,7 +112,7 @@ def require_api_key():
     if not show_api_key_input():
         st.warning("⚠️ Te rog autentifică-te cu API Key-ul OpenRouter pentru a accesa această pagină.")
         st.info("""
-        ### De ce este necesar API Key-ul?
+        ### De ce este necesar API key-ul?
         
         Această aplicație folosește **PandasAI** care necesită acces la modele AI (LLM) 
         pentru a procesa întrebările tale în limbaj natural și a genera analize.

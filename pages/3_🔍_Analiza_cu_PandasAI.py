@@ -8,11 +8,24 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.data_loader import load_data, get_column_info
 from utils.config import get_agent
 from utils.auth import require_api_key, get_selected_model
+from utils.ui import setup_page, render_header, render_footer
 
-st.set_page_config(page_title="Analiză cu PandasAI", page_icon="🔍", layout="wide")
+# Setup page
+setup_page(
+    title="Analiză cu PandasAI",
+    icon="🔍",
+    layout="wide"
+)
 
-st.title("🔍 Analiză Avansată cu PandasAI")
-st.markdown("Demonstrează capacitățile avansate ale PandasAI pentru analiză de date")
+render_header(
+    title="🔍 Analiză avansată cu PandasAI",
+    description="Demonstrează capacitățile avansate ale PandasAI pentru analiză de date"
+)
+
+st.info("""
+**💡 Notă:** Această pagină oferă o abordare **structurată** a analizei, ghidându-te prin categorii specifice. 
+Pentru conversații libere, folosește pagina **Chat**. Pentru rapoarte complete autonome, încearcă noul **Agent de Raportare**.
+""")
 
 # Require API key authentication
 api_key = require_api_key()
@@ -27,23 +40,26 @@ if "agent_advanced" not in st.session_state:
         st.session_state.agent_advanced = get_agent(df, api_key, get_selected_model())
 
 # Analysis categories
-st.header("📊 Categorii de Analiză")
+st.header("📊 Categorii de analiză")
 
-analysis_category = st.selectbox(
-    "Selectează Categoria de Analiză:",
+# Use radio for better visibility of options
+analysis_category = st.radio(
+    "Selectează categoria de analiză:",
     [
-        "Statistici Descriptive",
-        "Corelații și Relații",
-        "Analiză Comparativă",
-        "Predicții și Tendințe",
-        "Analiză Complexă"
-    ]
+        "Statistici descriptive",
+        "Corelații și relații",
+        "Analiză comparativă",
+        "Predicții și tendințe",
+        "Analiză complexă"
+    ],
+    horizontal=True,
+    label_visibility="collapsed"
 )
 
 st.markdown("---")
 
-if analysis_category == "Statistici Descriptive":
-    st.subheader("📈 Statistici Descriptive cu PandasAI")
+if analysis_category == "Statistici descriptive":
+    st.subheader("📈 Statistici descriptive cu PandasAI")
     
     st.markdown("""
     PandasAI poate genera automat statistici descriptive complexe despre date.
@@ -63,7 +79,7 @@ if analysis_category == "Statistici Descriptive":
     
     with col1:
         selected_query = st.selectbox(
-            "Întrebări Predefinite:",
+            "Întrebări predefinite:",
             [""] + predefined_queries,
             key="stats_query"
         )
@@ -98,8 +114,8 @@ if analysis_category == "Statistici Descriptive":
                     except Exception as e:
                         st.error(f"Eroare: {str(e)}")
 
-elif analysis_category == "Corelații și Relații":
-    st.subheader("🔗 Analiză Corelații cu PandasAI")
+elif analysis_category == "Corelații și relații":
+    st.subheader("🔗 Analiză corelații cu PandasAI")
     
     st.markdown("""
     PandasAI poate identifica și analiza relații între variabile.
@@ -115,7 +131,7 @@ elif analysis_category == "Corelații și Relații":
     ]
     
     selected_query = st.selectbox(
-        "Întrebări Predefinite:",
+        "Întrebări predefinite:",
         [""] + predefined_queries,
         key="corr_query"
     )
@@ -126,7 +142,7 @@ elif analysis_category == "Corelații și Relații":
         key="corr_custom"
     )
     
-    if st.button("🔍 Analizează Corelații", type="primary"):
+    if st.button("🔍 Analizează corelații", type="primary"):
         query = custom_query if custom_query else selected_query
         if query:
             with st.spinner("PandasAI analizează corelațiile..."):
@@ -156,8 +172,8 @@ elif analysis_category == "Corelații și Relații":
                 except Exception as e:
                     st.error(f"Eroare: {str(e)}")
 
-elif analysis_category == "Analiză Comparativă":
-    st.subheader("⚖️ Analiză Comparativă cu PandasAI")
+elif analysis_category == "Analiză comparativă":
+    st.subheader("⚖️ Analiză comparativă cu PandasAI")
     
     st.markdown("""
     PandasAI poate efectua comparații complexe între țări, perioade și indicatori.
@@ -173,7 +189,7 @@ elif analysis_category == "Analiză Comparativă":
     ]
     
     selected_query = st.selectbox(
-        "Întrebări Predefinite:",
+        "Întrebări predefinite:",
         [""] + predefined_queries,
         key="comp_query"
     )
@@ -214,8 +230,8 @@ elif analysis_category == "Analiză Comparativă":
                 except Exception as e:
                     st.error(f"Eroare: {str(e)}")
 
-elif analysis_category == "Predicții și Tendințe":
-    st.subheader("🔮 Analiză Tendințe cu PandasAI")
+elif analysis_category == "Predicții și tendințe":
+    st.subheader("🔮 Analiză tendințe cu PandasAI")
     
     st.markdown("""
     PandasAI poate identifica tendințe și pattern-uri în date.
@@ -231,7 +247,7 @@ elif analysis_category == "Predicții și Tendințe":
     ]
     
     selected_query = st.selectbox(
-        "Întrebări Predefinite:",
+        "Întrebări predefinite:",
         [""] + predefined_queries,
         key="trend_query"
     )
@@ -242,7 +258,7 @@ elif analysis_category == "Predicții și Tendințe":
         key="trend_custom"
     )
     
-    if st.button("🔍 Analizează Tendințe", type="primary"):
+    if st.button("🔍 Analizează tendințe", type="primary"):
         query = custom_query if custom_query else selected_query
         if query:
             with st.spinner("PandasAI analizează tendințele..."):
@@ -272,8 +288,8 @@ elif analysis_category == "Predicții și Tendințe":
                 except Exception as e:
                     st.error(f"Eroare: {str(e)}")
 
-else:  # Analiză Complexă
-    st.subheader("🧠 Analiză Complexă cu PandasAI")
+else:  # Analiză complexă
+    st.subheader("🧠 Analiză complexă cu PandasAI")
     
     st.markdown("""
     PandasAI poate răspunde la întrebări complexe care necesită multiple operații de analiză.
@@ -289,7 +305,7 @@ else:  # Analiză Complexă
     ]
     
     selected_query = st.selectbox(
-        "Întrebări Predefinite:",
+        "Întrebări predefinite:",
         [""] + predefined_queries,
         key="complex_query"
     )
@@ -301,7 +317,7 @@ else:  # Analiză Complexă
         key="complex_custom"
     )
     
-    if st.button("🔍 Analizează Complex", type="primary"):
+    if st.button("🔍 Analizează complex", type="primary"):
         query = custom_query if custom_query else selected_query
         if query:
             with st.spinner("PandasAI efectuează analiza complexă... Acest lucru poate dura mai mult."):
@@ -333,75 +349,77 @@ else:  # Analiză Complexă
 
 # Information section
 st.markdown("---")
-st.subheader("💡 Despre Capacitățile PandasAI")
+st.subheader("💡 Despre capacitățile PandasAI")
 
 with st.expander("🎯 Ce poate face PandasAI?"):
     st.markdown("""
-    ### Capacități Principale:
+    ### Capacități principale:
     
-    1. **Analiză Statistică Automată**
+    1. **Analiză statistică automată**
        - Calculează statistici descriptive complexe
        - Identifică distribuții și pattern-uri
        - Detectează outliers și anomalii
     
-    2. **Analiză Relațională**
+    2. **Analiză relațională**
        - Calculează corelații între variabile
        - Identifică dependențe și relații
        - Analizează cauzalitate
     
-    3. **Comparații Inteligente**
+    3. **Comparații inteligente**
        - Compară între grupuri (țări, perioade)
        - Identifică diferențe semnificative
        - Rankează și clasifică
     
-    4. **Analiză Temporală**
+    4. **Analiză temporală**
        - Identifică tendințe și pattern-uri
        - Calculează rate de creștere
        - Detectează schimbări semnificative
     
-    5. **Vizualizări Automate**
+    5. **Vizualizări automate**
        - Generează grafice relevante
        - Alege tipul optim de vizualizare
        - Creează dashboard-uri
     
-    6. **Analiză Complexă**
+    6. **Analiză complexă**
        - Combină multiple operații
        - Răspunde la întrebări multi-dimensionale
        - Oferă insights acționabile
     
-    ### Avantaje față de Pandas Tradițional:
+    ### Avantaje față de Pandas tradițional:
     
-    - ✅ **Limbaj Natural**: Nu necesită cunoștințe de programare
-    - ✅ **Inteligență Contextuală**: Înțelege intenția utilizatorului
+    - ✅ **Limbaj natural**: Nu necesită cunoștințe de programare
+    - ✅ **Inteligență contextuală**: Înțelege intenția utilizatorului
     - ✅ **Automatizare**: Generează cod automat
     - ✅ **Flexibilitate**: Se adaptează la diferite tipuri de întrebări
     - ✅ **Vizualizări**: Creează grafice automat când este relevant
     """)
 
-with st.expander("📚 Exemple de Întrebări Avansate"):
+with st.expander("📚 Exemple de întrebări avansate"):
     st.markdown("""
-    ### Întrebări Statistice:
+    ### Întrebări statistice:
     - "Calculează skewness și kurtosis pentru GDP în fiecare țară"
     - "Care este intervalul de confidență 95% pentru media FDI?"
     - "Efectuează un test de normalitate pentru Internet Users"
     
-    ### Întrebări de Corelație:
+    ### Întrebări de corelație:
     - "Care perechi de variabile au corelația cea mai puternică?"
     - "Există colinearitate între indicatori?"
     - "Calculează corelația parțială dintre GDP și IU controlând pentru Year"
     
-    ### Întrebări Comparative:
+    ### Întrebări comparative:
     - "Care țară a avut cea mai volatilă evoluție economică?"
     - "Compară performanța relativă a țărilor folosind z-scores"
     - "Identifică țara cu cea mai echilibrată dezvoltare"
     
-    ### Întrebări Temporale:
+    ### Întrebări temporale:
     - "Care a fost rata de creștere anuală compusă (CAGR) pentru GDP?"
     - "Identifică punctele de inflexiune în evoluția indicatorilor"
     - "Care ani au fost cei mai buni/răi pentru fiecare țară?"
     
-    ### Întrebări Complexe:
+    ### Întrebări complexe:
     - "Creează un scoring compozit bazat pe toți indicatorii"
     - "Grupează anii în perioade bazat pe similaritatea indicatorilor"
     - "Identifică factorii comuni care explică variația în date"
     """)
+
+render_footer()

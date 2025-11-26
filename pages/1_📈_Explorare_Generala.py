@@ -1,18 +1,24 @@
 import streamlit as st
-import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import sys
 import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.data_loader import load_data, get_column_info, get_country_colors
+from utils.ui import setup_page, render_header, render_footer
 
-st.set_page_config(page_title="Explorare Generală", page_icon="📈", layout="wide")
+# Setup page
+setup_page(
+    title="Explorare generală",
+    icon="📈",
+    layout="wide"
+)
 
-st.title("📈 Explorare Generală a Datelor")
-st.markdown("Vizualizări și statistici generale despre dataset-ul economic")
+render_header(
+    title="📈 Explorare generală a datelor",
+    description="Vizualizări și statistici generale despre dataset-ul economic"
+)
 
 # Load data
 df = load_data()
@@ -22,13 +28,13 @@ colors = get_country_colors()
 # Sidebar filters
 st.sidebar.header("🔍 Filtre")
 selected_countries = st.sidebar.multiselect(
-    "Selectează Țări:",
+    "Selectează țări:",
     options=df['Country'].unique(),
     default=df['Country'].unique()
 )
 
 year_range = st.sidebar.slider(
-    "Interval Ani:",
+    "Interval ani:",
     min_value=int(df['Year'].min()),
     max_value=int(df['Year'].max()),
     value=(int(df['Year'].min()), int(df['Year'].max()))
@@ -42,22 +48,22 @@ filtered_df = df[
 ]
 
 # Overview metrics
-st.header("📊 Statistici Generale")
+st.header("📊 Statistici generale")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.metric("Total Înregistrări", len(filtered_df))
+    st.metric("Total înregistrări", len(filtered_df))
 with col2:
-    st.metric("Țări Selectate", len(selected_countries))
+    st.metric("Țări selectate", len(selected_countries))
 with col3:
-    st.metric("Ani Acoperiți", f"{year_range[0]}-{year_range[1]}")
+    st.metric("Ani acoperiți", f"{year_range[0]}-{year_range[1]}")
 with col4:
     st.metric("Indicatori", len([col for col in df.columns if col not in ['Country', 'Year']]))
 
 st.markdown("---")
 
 # Data preview
-st.header("👀 Previzualizare Date")
+st.header("👀 Previzualizare date")
 col1, col2 = st.columns([3, 1])
 
 with col1:
@@ -68,7 +74,7 @@ with col1:
     )
 
 with col2:
-    st.subheader("Informații Coloane")
+    st.subheader("Informații coloane")
     for col, info in column_info.items():
         if col in ['Country', 'Year']:
             continue
@@ -80,15 +86,15 @@ with col2:
 st.markdown("---")
 
 # Distribution visualizations
-st.header("📊 Distribuții și Tendințe")
+st.header("📊 Distribuții și tendințe")
 
-tab1, tab2, tab3 = st.tabs(["📈 Evoluție Temporală", "📊 Comparații", "🎯 Distribuții"])
+tab1, tab2, tab3 = st.tabs(["📈 Evoluție temporală", "📊 Comparații", "🎯 Distribuții"])
 
 with tab1:
-    st.subheader("Evoluția Indicatorilor în Timp")
+    st.subheader("Evoluția indicatorilor în timp")
     
     indicator = st.selectbox(
-        "Selectează Indicator:",
+        "Selectează indicator:",
         options=['GDP', 'FDI', 'IU', 'MCS', 'PA', 'EF'],
         format_func=lambda x: f"{x} - {column_info[x]['description']}"
     )
@@ -115,14 +121,14 @@ with tab1:
     # Show statistics
     st.subheader(f"Statistici {indicator}")
     stats_df = filtered_df.groupby('Country')[indicator].agg(['mean', 'min', 'max', 'std']).round(2)
-    stats_df.columns = ['Media', 'Minim', 'Maxim', 'Deviație Standard']
+    stats_df.columns = ['Media', 'Minim', 'Maxim', 'Deviație standard']
     st.dataframe(stats_df, use_container_width=True)
 
 with tab2:
-    st.subheader("Comparație între Țări")
+    st.subheader("Comparație între țări")
     
     year_to_compare = st.select_slider(
-        "Selectează Anul pentru Comparație:",
+        "Selectează anul pentru comparație:",
         options=sorted(filtered_df['Year'].unique()),
         value=int(filtered_df['Year'].max())
     )
@@ -149,10 +155,10 @@ with tab2:
             st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
-    st.subheader("Distribuția Valorilor")
+    st.subheader("Distribuția valorilor")
     
     indicator_dist = st.selectbox(
-        "Selectează Indicator pentru Distribuție:",
+        "Selectează indicator pentru distribuție:",
         options=['GDP', 'FDI', 'IU', 'MCS', 'PA', 'EF'],
         format_func=lambda x: f"{x} - {column_info[x]['description']}",
         key="dist_indicator"
@@ -192,23 +198,23 @@ with tab3:
 st.markdown("---")
 
 # Summary statistics
-st.header("📈 Statistici Descriptive Complete")
+st.header("📈 Statistici descriptive complete")
 
 selected_indicator = st.selectbox(
-    "Selectează Indicator pentru Statistici Detaliate:",
+    "Selectează indicator pentru statistici detaliate:",
     options=['GDP', 'FDI', 'IU', 'MCS', 'PA', 'EF'],
     format_func=lambda x: f"{x} - {column_info[x]['description']}",
     key="stats_indicator"
 )
 
 stats_by_country = filtered_df.groupby('Country')[selected_indicator].describe().round(2)
-stats_by_country.columns = ['Count', 'Media', 'Dev. Std', 'Min', '25%', '50% (Mediană)', '75%', 'Max']
+stats_by_country.columns = ['Count', 'Media', 'Dev. std', 'Min', '25%', '50% (Mediană)', '75%', 'Max']
 
 st.dataframe(stats_by_country, use_container_width=True)
 
 # Download filtered data
 st.markdown("---")
-st.subheader("💾 Descarcă Date Filtrate")
+st.subheader("💾 Descarcă date filtrate")
 
 csv = filtered_df.to_csv(index=False).encode('utf-8')
 st.download_button(
@@ -217,3 +223,5 @@ st.download_button(
     file_name=f"date_economice_{year_range[0]}_{year_range[1]}.csv",
     mime="text/csv"
 )
+
+render_footer()
