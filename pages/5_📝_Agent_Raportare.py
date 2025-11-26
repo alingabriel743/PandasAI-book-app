@@ -27,11 +27,17 @@ def create_pdf_report(goal, report_text, charts):
             self.set_font('Helvetica', 'I', 8)
             self.cell(0, 10, f'Pagina {self.page_no()}', 0, 0, 'C')
 
-    pdf = PDF()
+    # Explicitly set A4 format and margins
+    pdf = PDF(orientation='P', unit='mm', format='A4')
+    pdf.set_margins(left=15, top=15, right=15)
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     
     # Helper to clean text for Latin-1 (Standard Fonts)
     def clean_text(text):
+        if not isinstance(text, str):
+            return str(text)
+            
         # Replace characters not supported in Latin-1
         replacements = {
             'ă': 'a', 'Ă': 'A',
@@ -40,55 +46,73 @@ def create_pdf_report(goal, report_text, charts):
             'î': 'i', 'Î': 'I',
             'â': 'a', 'Â': 'A',
             '„': '"', '”': '"',
-            '–': '-', '—': '-'
+            '–': '-', '—': '-',
+            '…': '...'
         }
         for char, repl in replacements.items():
             text = text.replace(char, repl)
+            
+        # Final fallback for any other non-latin-1 chars
         return text.encode('latin-1', 'replace').decode('latin-1')
 
-    # Title
-    pdf.set_font("Helvetica", "B", 12)
-    pdf.multi_cell(0, 10, f"Obiectiv: {clean_text(goal)}")
-    pdf.ln(5)
-    
-    # Content
-    pdf.set_font("Helvetica", "", 11)
-    
-    # Simple Markdown parsing
-    lines = report_text.split('\n')
-    for line in lines:
-        cleaned_line = clean_text(line)
-        if line.startswith('# '):
-            pdf.set_font("Helvetica", "B", 14)
-            pdf.multi_cell(0, 10, cleaned_line.replace('# ', ''))
-            pdf.set_font("Helvetica", "", 11)
-        elif line.startswith('## '):
-            pdf.set_font("Helvetica", "B", 12)
-            pdf.multi_cell(0, 10, cleaned_line.replace('## ', ''))
-            pdf.set_font("Helvetica", "", 11)
-        elif line.startswith('### '):
-            pdf.set_font("Helvetica", "B", 11)
-            pdf.multi_cell(0, 10, cleaned_line.replace('### ', ''))
-            pdf.set_font("Helvetica", "", 11)
-        else:
-            pdf.multi_cell(0, 6, cleaned_line)
-            
-    # Charts
-    if charts:
-        pdf.add_page()
-        pdf.set_font("Helvetica", "B", 14)
-        pdf.cell(0, 10, "Grafice Generate", 0, 1, 'L')
+    try:
+        # Title
+        pdf.set_font("Helvetica", "B", 12)
+        pdf.multi_cell(0, 10, f"Obiectiv: {clean_text(goal)}")
         pdf.ln(5)
         
-        for i, chart_path in enumerate(charts):
-            if os.path.exists(chart_path):
-                pdf.set_font("Helvetica", "B", 10)
-                pdf.cell(0, 10, f"Figura {i+1}", 0, 1, 'L')
-                # Calculate width to fit
-                pdf.image(chart_path, w=170)
-                pdf.ln(10)
+        # Content
+        pdf.set_font("Helvetica", "", 11)
+        
+        # Simple Markdown parsing
+        lines = report_text.split('\n')
+        for line in lines:
+            cleaned_line = clean_text(line)
+            try:
+                if line.startswith('# '):
+                    pdf.set_font("Helvetica", "B", 14)
+                    pdf.multi_cell(0, 10, cleaned_line.replace('# ', ''))
+                    pdf.set_font("Helvetica", "", 11)
+                elif line.startswith('## '):
+                    pdf.set_font("Helvetica", "B", 12)
+                    pdf.multi_cell(0, 10, cleaned_line.replace('## ', ''))
+                    pdf.set_font("Helvetica", "", 11)
+                elif line.startswith('### '):
+                    pdf.set_font("Helvetica", "B", 11)
+                    pdf.multi_cell(0, 10, cleaned_line.replace('### ', ''))
+                    pdf.set_font("Helvetica", "", 11)
+                else:
+                    pdf.multi_cell(0, 6, cleaned_line)
+            except Exception:
+                # Fallback for problematic lines (e.g. too long words)
+                continue
+                
+        # Charts
+        if charts:
+            pdf.add_page()
+            pdf.set_font("Helvetica", "B", 14)
+            pdf.cell(0, 10, "Grafice Generate", 0, 1, 'L')
+            pdf.ln(5)
+            
+            for i, chart_path in enumerate(charts):
+                if os.path.exists(chart_path):
+                    try:
+                        pdf.set_font("Helvetica", "B", 10)
+                        pdf.cell(0, 10, f"Figura {i+1}", 0, 1, 'L')
+                        # Calculate width to fit (A4 width 210 - 30 margin = 180)
+                        pdf.image(chart_path, w=170)
+                        pdf.ln(10)
+                    except Exception:
+                        pdf.cell(0, 10, f"[Eroare la randarea graficului {i+1}]", 0, 1)
 
-    return pdf.output()
+        return pdf.output()
+    except Exception as e:
+        # If PDF generation fails completely, return a simple error PDF
+        err_pdf = FPDF()
+        err_pdf.add_page()
+        err_pdf.set_font("Helvetica", "", 12)
+        err_pdf.multi_cell(0, 10, f"Eroare critica la generarea PDF: {str(e)}")
+        return err_pdf.output()
 
 
 # Setup page
