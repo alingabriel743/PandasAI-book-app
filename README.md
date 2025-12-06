@@ -1,283 +1,277 @@
-# 📊 Aplicație Demonstrativă PandasAI
+# PandasAI Demo Application
 
-Aplicație multi-pagină Streamlit pentru demonstrarea capacităților **PandasAI** în analiza datelor economice.
+A multi-page Streamlit application demonstrating **PandasAI** capabilities for economic data analysis.
 
-## 🎯 Despre Proiect
+## About the Project
 
-Această aplicație este dezvoltată ca material demonstrativ pentru un **capitol de carte despre PandasAI**. Prezintă capacitățile bibliotecii PandasAI în analiza unui dataset economic real, conținând indicatori pentru România, Bulgaria, Turcia și Grecia (1990-2023).
+This application was developed as demonstration material for a **book chapter about PandasAI**. It showcases the PandasAI library capabilities using a real economic dataset containing indicators for Romania, Bulgaria, Turkey, and Greece (1990-2023).
 
-## 🤖 Ce este PandasAI?
+## What is PandasAI?
 
-**PandasAI** este o bibliotecă Python care adaugă capabilități de AI generativ la pandas DataFrames, permițând:
+**PandasAI** is a Python library that adds generative AI capabilities to pandas DataFrames, enabling:
 
-- 💬 Interogări în **limbaj natural**
-- 📊 Generare **automată de vizualizări**
-- 🔍 **Analize complexe** fără cod
-- 📈 **Insights instant** din date
+- Queries in **natural language**
+- **Automatic visualization** generation
+- **Complex analyses** without code
+- **Instant insights** from data
 
-## 📚 Dataset
+## Dataset
 
-Dataset-ul conține următorii **indicatori economici**:
+The dataset contains the following **economic indicators**:
 
-| Indicator | Descriere | Unitate |
-|-----------|-----------|---------|
-| **GDP** | Produsul Intern Brut per capita | USD |
-| **FDI** | Foreign Direct Investment | % din PIB |
-| **IU** | Internet Users | % din populație |
-| **MCS** | Mobile Cellular Subscriptions | per 100 persoane |
-| **PA** | Patent Applications | număr aplicații |
+| Indicator | Description | Unit |
+|-----------|-------------|------|
+| **GDP** | Gross Domestic Product per capita | USD |
+| **FDI** | Foreign Direct Investment | % of GDP |
+| **IU** | Internet Users | % of population |
+| **MCS** | Mobile Cellular Subscriptions | per 100 people |
+| **PA** | Patent Applications | number of applications |
 | **EF** | Economic Freedom Index | index (0-10) |
 
-**Perioada**: 1990-2023  
-**Țări**: România, Bulgaria, Turcia, Grecia  
-**Total înregistrări**: 136 (34 ani × 4 țări)
+**Period**: 1990-2023  
+**Countries**: Romania, Bulgaria, Turkey, Greece  
+**Total records**: 136 (34 years x 4 countries)
 
-## 🚀 Instalare și Configurare
+## Installation and Configuration
 
-### Cerințe
+### Requirements
 
 - Python 3.8+
 - pip
 
-### Pași de Instalare
+### Installation Steps
 
-1. **Clonează repository-ul**
+1. **Clone the repository**
 ```bash
 git clone <repository-url>
 cd PandasAI
 ```
 
-2. **Instalează dependențele**
+2. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-5. **Obține API Key Groq**
-   - Vizitează [https://console.groq.com/](https://console.groq.com/)
-   - Creează un cont gratuit
-   - Generează un API key
-   - Groq oferă inferență ultra-rapidă pentru modele open-source
+3. **Get Groq API Key**
+   - Visit [https://console.groq.com/](https://console.groq.com/)
+   - Create a free account
+   - Generate an API key
+   - Groq offers ultra-fast inference for open-source models
 
-4. **Rulează aplicația**
+4. **Run the application**
 ```bash
 streamlit run app.py
 ```
 
-5. **Accesează aplicația**
-   - Deschide browser-ul la `http://localhost:8501`
-   - Introdu API Key-ul în bara laterală
-   - Începe să explorezi!
+5. **Access the application**
+   - Open browser at `http://localhost:8501`
+   - Enter API Key in the sidebar
+   - Start exploring!
 
-## 📱 Structura Aplicației
+## Application Structure
 
-### Pagini Principale
+### Main Pages
 
-#### 🏠 **Pagina Principală** (`app.py`)
-- Introducere în PandasAI
-- Prezentare dataset
-- Ghid de utilizare rapidă
-- Navigare către funcționalități
+#### **Home Page** (`app.py`)
+- Introduction to PandasAI
+- Dataset presentation
+- Quick start guide
+- Navigation to features
 
-#### 📈 **1. Explorare Generală**
-- Statistici descriptive generale
-- Vizualizări interactive (Plotly)
-- Filtre dinamice pentru țări și perioade
-- Comparații vizuale între indicatori
-- Export date filtrate
+#### **1. General Exploration**
+- General descriptive statistics
+- Interactive visualizations (Plotly)
+- Dynamic filters for countries and periods
+- Visual comparisons between indicators
+- Filtered data export
 
-#### 🤖 **2. Chat cu PandasAI**
-- **Interfață conversațională** cu PandasAI
-- Întrebări în limbaj natural (română/engleză)
-- Istoric conversație
-- Exemple de întrebări predefinite
-- Răspunsuri text, tabele și grafice
+#### **2. Chat with PandasAI**
+- **Conversational interface** with PandasAI
+- Natural language queries (Romanian/English)
+- Conversation history
+- Predefined example questions
+- Text, table, and chart responses
 
-**Exemple de întrebări:**
-- "Care este media GDP pentru România?"
-- "Compară Internet Users între toate țările în 2023"
-- "Creează un grafic cu evoluția FDI pentru Bulgaria"
-- "Care țară are cea mai mare creștere a Patent Applications?"
+**Example questions:**
+- "What is the average GDP for Romania?"
+- "Compare Internet Users between all countries in 2023"
+- "Create a chart with FDI evolution for Bulgaria"
+- "Which country has the highest Patent Applications growth?"
 
-#### 📊 **3. Analiză Comparativă**
-- Comparații anuale între țări
-- Comparații pe perioade de timp
-- Analiză multi-indicator
-- Grafice radar și heatmap
-- Rankings și clasamente
+#### **3. Analysis with PandasAI**
+- **Descriptive Statistics**: Mean, median, standard deviation
+- **Correlations and Relationships**: Identify dependencies between variables
+- **Comparative Analysis**: Compare countries and periods
+- **Predictions and Trends**: Temporal patterns
+- **Complex Analysis**: Multi-dimensional queries
 
-#### 📉 **4. Analiză Temporală**
-- Tendințe generale în timp
-- Analiză rate de creștere
-- Comparații între perioade
-- Medii mobile
-- Analiză pe decade
+#### **4. PandasAI Examples Gallery**
+- **24+ practical examples** organized by categories
+- One-click executable examples
+- Execution history
+- Custom query section
+- Tips and best practices
 
-#### 🔍 **5. Analiză cu PandasAI**
-- **Statistici Descriptive**: Media, mediana, deviație standard
-- **Corelații și Relații**: Identifică dependențe între variabile
-- **Analiză Comparativă**: Compară țări și perioade
-- **Predicții și Tendințe**: Pattern-uri temporale
-- **Analiză Complexă**: Întrebări multi-dimensionale
+**Example categories:**
+- Simple Calculations
+- Aggregations and Groupings
+- Temporal Analysis
+- Correlations
+- Comparisons
+- Visualizations
+- Complex Filters
+- Advanced Calculations
 
-#### 📋 **6. Galerie Exemple PandasAI**
-- **24+ exemple practice** organizate pe categorii
-- Exemple executabile cu un click
-- Istoric execuții
-- Secțiune pentru întrebări personalizate
-- Sfaturi și best practices
+#### **5. Reporting Agent**
+- **Automated report generation** from a research objective
+- Multi-step agentic workflow: Planning, Execution, Synthesis
+- PDF export with professional formatting
+- Chart gallery integration
 
-**Categorii de exemple:**
-- 🔢 Calcule Simple
-- 📊 Agregări și Grupări
-- 📈 Analiză Temporală
-- 🔗 Corelații
-- ⚖️ Comparații
-- 📉 Vizualizări
-- 🔍 Filtrări Complexe
-- 🧮 Calcule Avansate
+## Technologies Used
 
-## 🛠️ Tehnologii Utilizate
+- **Streamlit**: Web application framework
+- **PandasAI**: AI-powered data analysis
+- **Pandas**: Data manipulation
+- **Plotly**: Interactive visualizations
+- **Groq**: API for fast LLM inference
+- **FPDF2**: PDF generation
+- **Python 3.8+**: Programming language
 
-- **Streamlit**: Framework pentru aplicații web
-- **PandasAI**: Analiză date cu AI
-- **Pandas**: Manipulare date
-- **Plotly**: Vizualizări interactive
-- **Groq**: API pentru modele LLM rapide
-- **Python 3.8+**: Limbaj de programare
+## Usage Examples
 
-## 📖 Exemple de Utilizare
-
-### Exemplu 1: Întrebare Simplă
+### Example 1: Simple Question
 ```
-Întrebare: "Care este media GDP pentru România?"
-Răspuns: PandasAI calculează automat media și returnează valoarea
+Question: "What is the average GDP for Romania?"
+Response: PandasAI automatically calculates the mean and returns the value
 ```
 
-### Exemplu 2: Comparație
+### Example 2: Comparison
 ```
-Întrebare: "Compară GDP-ul mediu între România și Bulgaria"
-Răspuns: Tabel comparativ cu valorile medii pentru ambele țări
-```
-
-### Exemplu 3: Vizualizare
-```
-Întrebare: "Creează un grafic cu evoluția Internet Users pentru toate țările"
-Răspuns: Grafic line chart generat automat cu evoluția în timp
+Question: "Compare average GDP between Romania and Bulgaria"
+Response: Comparative table with mean values for both countries
 ```
 
-### Exemplu 4: Analiză Complexă
+### Example 3: Visualization
 ```
-Întrebare: "Care este corelația dintre GDP și Internet Users pentru fiecare țară?"
-Răspuns: Tabel cu coeficienți de corelație pentru fiecare țară
+Question: "Create a chart with Internet Users evolution for all countries"
+Response: Automatically generated line chart with time evolution
 ```
 
-## 🎓 Concepte Demonstrate
+### Example 4: Complex Analysis
+```
+Question: "What is the correlation between GDP and Internet Users for each country?"
+Response: Table with correlation coefficients for each country
+```
 
-Aplicația demonstrează următoarele **capabilități ale PandasAI**:
+## Demonstrated Concepts
+
+The application demonstrates the following **PandasAI capabilities**:
 
 ### 1. **Natural Language Processing**
-- Înțelegere întrebări în limbaj natural
-- Procesare context și intenție
-- Suport multilingv (română/engleză)
+- Understanding natural language questions
+- Context and intent processing
+- Multilingual support (Romanian/English)
 
-### 2. **Generare Automată de Cod**
-- Transformare întrebări în cod Pandas
-- Optimizare operații
-- Gestionare edge cases
+### 2. **Automatic Code Generation**
+- Transforming questions into Pandas code
+- Operation optimization
+- Edge case handling
 
-### 3. **Analiză Statistică**
-- Statistici descriptive
-- Corelații și relații
-- Agregări complexe
-- Filtrări și sortări
+### 3. **Statistical Analysis**
+- Descriptive statistics
+- Correlations and relationships
+- Complex aggregations
+- Filtering and sorting
 
-### 4. **Vizualizări Automate**
-- Selecție automată tip grafic
-- Generare chart-uri relevante
-- Formatare și stilizare
+### 4. **Automatic Visualizations**
+- Automatic chart type selection
+- Relevant chart generation
+- Formatting and styling
 
-### 5. **Inteligență Contextuală**
-- Înțelegere context dataset
-- Adaptare la tipul datelor
-- Sugestii relevante
+### 5. **Contextual Intelligence**
+- Dataset context understanding
+- Adaptation to data types
+- Relevant suggestions
 
-## 📝 Structura Fișierelor
+## File Structure
 
 ```
 PandasAI/
-├── app.py                          # Pagina principală
-├── requirements.txt                # Dependențe Python
-├── README.md                       # Documentație
-├── digi.csv                        # Dataset economic
+├── app.py                          # Main page
+├── requirements.txt                # Python dependencies
+├── README.md                       # Documentation
+├── digi.csv                        # Economic dataset
 ├── utils/
-│   ├── config.py                   # Configurare PandasAI și Groq
-│   └── data_loader.py              # Funcții încărcare date
+│   ├── config.py                   # PandasAI and Groq configuration
+│   ├── auth.py                     # API key authentication
+│   ├── ui.py                       # UI components
+│   └── data_loader.py              # Data loading functions
 ├── pages/
-│   ├── 1_📈_Explorare_Generala.py
-│   ├── 2_🤖_Chat_cu_PandasAI.py
-│   ├── 3_📊_Analiza_Comparativa.py
-│   ├── 4_📉_Analiza_Temporala.py
-│   ├── 5_🔍_Analiza_cu_PandasAI.py
-│   └── 6_📋_Exemple_PandasAI.py
+│   ├── 1_Explorare_Generala.py
+│   ├── 2_Chat_cu_PandasAI.py
+│   ├── 3_Analiza_cu_PandasAI.py
+│   ├── 4_Exemple_PandasAI.py
+│   └── 5_Agent_Raportare.py
 ├── exports/
-│   └── charts/                     # Grafice generate
-└── cache/                          # Cache PandasAI
+│   └── charts/                     # Generated charts
+└── cache/                          # PandasAI cache
 ```
 
-## 🔧 Configurare Avansată
+## Advanced Configuration
 
-### Personalizare Model LLM
+### LLM Model Customization
 
-În `utils/config.py`, poți modifica modelul folosit:
+In `utils/config.py`, you can modify the model used:
 
 ```python
 llm = GroqLLM(
     api_token=api_key,
-    model="llama3-70b-8192"  # Modifică aici
+    model="llama-3.3-70b-versatile"  # Modify here
 )
 ```
 
-### Modele Disponibile (Groq)
-- `llama-3.3-70b-versatile`
+### Available Models (Groq)
+- `llama-3.3-70b-versatile` (recommended)
 - `llama3-70b-8192`
 - `mixtral-8x7b-32768`
 
-## 💡 Sfaturi pentru Utilizare
+## Usage Tips
 
-### Întrebări Eficiente
+### Effective Questions
 
-✅ **Bune Practici:**
-- Fii specific: "Media GDP pentru România" vs "GDP România"
-- Specifică perioada: "între 2010 și 2020"
-- Cere vizualizări: "Creează un grafic..."
-- Folosește termeni clari: "compară", "calculează", "arată"
+**Best Practices:**
+- Be specific: "Average GDP for Romania" vs "GDP Romania"
+- Specify period: "between 2010 and 2020"
+- Request visualizations: "Create a chart..."
+- Use clear terms: "compare", "calculate", "show"
 
-❌ **De Evitat:**
-- Întrebări vagi: "Spune-mi despre date"
-- Prea multe cerințe simultan
-- Termeni ambigui fără context
-- Presupuneri implicite
+**Things to Avoid:**
+- Vague questions: "Tell me about the data"
+- Too many simultaneous requirements
+- Ambiguous terms without context
+- Implicit assumptions
 
 ### Debugging
 
-Dacă întâmpini probleme:
-1. Reformulează întrebarea mai simplu
-2. Verifică numele coloanelor
-3. Împarte întrebări complexe în mai multe simple
-4. Verifică API Key-ul
+If you encounter problems:
+1. Rephrase the question more simply
+2. Check column names
+3. Split complex questions into simpler ones
+4. Verify the API Key
 
-## 🤝 Contribuții
+## Contributions
 
-Acest proiect este dezvoltat ca material educațional pentru un capitol de carte despre PandasAI.
+This project is developed as educational material for a book chapter about PandasAI.
 
-## 📄 Licență
+## License
 
-Acest proiect este dezvoltat în scop educațional.
+This project is developed for educational purposes.
 
-## 📧 Contact
+## Contact
 
-Pentru întrebări sau sugestii legate de aplicație, te rog deschide un issue în repository.
+For questions or suggestions about the application, please open an issue in the repository.
 
 ---
 
-**Dezvoltat cu ❤️ pentru demonstrarea capacităților PandasAI**
+**Developed for demonstrating PandasAI capabilities**
