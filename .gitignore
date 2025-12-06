@@ -4,3 +4,5 @@ exports/
 __pycache__/
 pandasai.log
 .DS_Store
+.agent/
+assets/

@@ -17,7 +17,7 @@ setup_page(
 
 render_header(
     title="📈 Explorare generală a datelor",
-    description="Vizualizări și statistici generale despre dataset-ul economic"
+    description="Vizualizări și statistici generale despre setul de date economic"
 )
 
 # Load data

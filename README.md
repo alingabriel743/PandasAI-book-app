@@ -52,11 +52,11 @@ cd PandasAI
 pip install -r requirements.txt
 ```
 
-3. **Obține API Key OpenRouter**
-   - Vizitează [https://openrouter.ai/](https://openrouter.ai/)
+5. **Obține API Key Groq**
+   - Vizitează [https://console.groq.com/](https://console.groq.com/)
    - Creează un cont gratuit
    - Generează un API key
-   - OpenRouter oferă acces gratuit la modele precum Llama 3.3 70B
+   - Groq oferă inferență ultra-rapidă pentru modele open-source
 
 4. **Rulează aplicația**
 ```bash
@@ -142,7 +142,7 @@ streamlit run app.py
 - **PandasAI**: Analiză date cu AI
 - **Pandas**: Manipulare date
 - **Plotly**: Vizualizări interactive
-- **OpenRouter**: API pentru modele LLM
+- **Groq**: API pentru modele LLM rapide
 - **Python 3.8+**: Limbaj de programare
 
 ## 📖 Exemple de Utilizare
@@ -210,7 +210,7 @@ PandasAI/
 ├── README.md                       # Documentație
 ├── digi.csv                        # Dataset economic
 ├── utils/
-│   ├── config.py                   # Configurare PandasAI și OpenRouter
+│   ├── config.py                   # Configurare PandasAI și Groq
 │   └── data_loader.py              # Funcții încărcare date
 ├── pages/
 │   ├── 1_📈_Explorare_Generala.py
@@ -231,16 +231,16 @@ PandasAI/
 În `utils/config.py`, poți modifica modelul folosit:
 
 ```python
-llm = OpenRouterLLM(
+llm = GroqLLM(
     api_token=api_key,
-    model="meta-llama/llama-3.3-70b-instruct:free"  # Modifică aici
+    model="llama3-70b-8192"  # Modifică aici
 )
 ```
 
-### Modele Disponibile (gratuite pe OpenRouter)
-- `meta-llama/llama-3.3-70b-instruct:free`
-- `qwen/qwen-2.5-72b-instruct:free`
-- `google/gemini-2.0-flash-exp:free`
+### Modele Disponibile (Groq)
+- `llama-3.3-70b-versatile`
+- `llama3-70b-8192`
+- `mixtral-8x7b-32768`
 
 ## 💡 Sfaturi pentru Utilizare
 

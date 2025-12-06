@@ -48,20 +48,20 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("### 📚 Despre dataset")
+    st.markdown("### 📚 Despre setul de date")
     st.markdown("""
-    Dataset-ul acoperă perioada **1990-2023** pentru **România, Bulgaria, Turcia și Grecia**.
+    Setul de date acoperă perioada **1990-2023** pentru **România, Bulgaria, Turcia și Grecia**.
     Include indicatori cheie precum:
     """)
     
     # Dataset indicators as pills/badges
     indicators = [
-        ("GDP", "Produs intern brut", "💰"),
-        ("FDI", "Investiții străine", "🌍"),
-        ("Internet Users", "Digitalizare", "💻"),
-        ("Mobile Subs", "Conectivitate", "📱"),
-        ("Patents", "Inovație", "💡"),
-        ("Economic Freedom", "Libertate ec.", "⚖️")
+        ("GDP", "Produs Intern Brut", "💰"),
+        ("FDI", "Investiții Străine", "🌍"),
+        ("Internet Users", "Utilizatori Internet", "💻"),
+        ("Mobile Subs", "Abonamente Mobile", "📱"),
+        ("Patents", "Brevete", "💡"),
+        ("Economic Freedom", "Libertate Economică", "⚖️")
     ]
     
     cols = st.columns(3)
@@ -79,7 +79,7 @@ with col2:
     st.markdown("### 🚀 Start rapid")
     
     steps = [
-        ("1", "Obține API key", "Gratuit de la OpenRouter.ai"),
+        ("1", "Obține Cheia API", "Gratuit de la console.groq.com"),
         ("2", "Configurează", "Introdu cheia în meniul lateral"),
         ("3", "Explorează", "Alege o pagină din meniu")
     ]

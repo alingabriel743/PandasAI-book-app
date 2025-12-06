@@ -243,7 +243,7 @@ def render_footer():
     st.markdown("""
     <div style='text-align: center; padding: 2rem; color: #6c757d;'>
         <p><strong>Aplicație demonstrativă PandasAI</strong></p>
-        <p style='font-size: 0.9rem;'>Construit cu ❤️ folosind PandasAI, Streamlit și OpenRouter</p>
+        <p style='font-size: 0.9rem;'>Construit cu ❤️ folosind PandasAI, Streamlit și Groq</p>
         <p style='font-size: 0.8rem; opacity: 0.7;'>Dezvoltat pentru capitolul de carte despre PandasAI</p>
     </div>
     """, unsafe_allow_html=True)

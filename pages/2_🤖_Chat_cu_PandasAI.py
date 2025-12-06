@@ -38,7 +38,7 @@ if "agent" not in st.session_state:
         st.session_state.agent = get_agent(df, api_key, get_selected_model())
 
 # Display dataset info
-with st.expander("📊 Informații despre dataset"):
+with st.expander("📊 Informații despre setul de date", expanded=False):
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Total înregistrări", len(df))
@@ -52,31 +52,31 @@ with st.expander("📊 Informații despre dataset"):
         st.write(f"**{col}**: {info['description']}")
 
 # Example queries
-st.subheader("💡 Exemple de întrebări")
-st.markdown("""
-Poți pune orice întrebare despre date în limbaj natural. Iată câteva exemple:
-""")
-
-example_queries = [
-    "Care este media PIB-ului pentru România în toată perioada?",
-    "Care țară a avut cel mai mare Internet Usage în 2020?",
-    "Arată-mi evoluția subscripțiilor mobile pentru Turcia între 2000 și 2010",
-    "Compară Economic Freedom Index între toate țările în 2023",
-    "Care este corelația dintre PIB și utilizatorii de internet pentru Grecia?",
-    "Creează un grafic cu evoluția PIB-ului pentru toate țările",
-    "Care țară a avut cea mai mare creștere a FDI între 2010 și 2020?",
-    "Calculează media Patent Applications pentru Bulgaria după 2015",
-    "Arată-mi top 3 ani cu cel mai mare PIB pentru România",
-    "Care este diferența dintre PIB-ul Greciei și al Bulgariei în 2023?"
-]
-
-cols = st.columns(2)
-for idx, example in enumerate(example_queries):
-    with cols[idx % 2]:
-        if st.button(example, key=f"example_{idx}", use_container_width=True):
-            st.session_state.current_query = example
+with st.expander("💡 Exemple de întrebări", expanded=False):
+    st.markdown("Click pe un exemplu pentru a-l copia în chat:")
+    
+    example_queries = [
+        "Care este media PIB-ului pentru România în toată perioada?",
+        "Care țară a avut cel mai mare Internet Usage în 2020?",
+        "Arată-mi evoluția subscripțiilor mobile pentru Turcia între 2000 și 2010",
+        "Compară Economic Freedom Index între toate țările în 2023",
+        "Care este corelația dintre PIB și utilizatorii de internet pentru Grecia?",
+        "Creează un grafic cu evoluția PIB-ului pentru toate țările",
+        "Care țară a avut cea mai mare creștere a FDI între 2010 și 2020?",
+        "Calculează media Patent Applications pentru Bulgaria după 2015",
+        "Arată-mi top 3 ani cu cel mai mare PIB pentru România",
+        "Care este diferența dintre PIB-ul Greciei și al Bulgariei în 2023?"
+    ]
+    
+    cols = st.columns(2)
+    for idx, example in enumerate(example_queries):
+        with cols[idx % 2]:
+            if st.button(example, key=f"example_{idx}", use_container_width=True):
+                st.session_state.current_query = example
 
 st.markdown("---")
+
+# --- MAIN CHAT INTERFACE ---
 
 # Chat interface
 st.subheader("💬 Conversație")
@@ -172,82 +172,29 @@ if st.session_state.messages:
         st.session_state.messages = []
         st.rerun()
 
+
+
 # Tips section
 st.markdown("---")
-st.subheader("💡 Sfaturi pentru întrebări eficiente")
-
-with st.expander("Cum să pui întrebări bune"):
+with st.expander("💡 Sfaturi pentru întrebări"):
     st.markdown("""
-    ### Tipuri de întrebări pe care le poți pune:
-    
     **1. Întrebări statistice:**
-    - "Care este media/mediana/suma pentru [indicator] în [țară]?"
-    - "Care este valoarea maximă/minimă pentru [indicator]?"
+    - "Care este media/mediana/suma pentru [indicator]?"
     
     **2. Comparații:**
     - "Compară [indicator] între [țară1] și [țară2]"
-    - "Care țară are cel mai mare/mic [indicator]?"
     
     **3. Analize temporale:**
-    - "Arată evoluția [indicator] pentru [țară] între [an1] și [an2]"
-    - "Care a fost creșterea [indicator] pentru [țară]?"
+    - "Arată evoluția [indicator] între [an1] și [an2]"
     
-    **4. Corelații:**
-    - "Care este corelația dintre [indicator1] și [indicator2]?"
-    - "Există o relație între [indicator1] și [indicator2]?"
-    
-    **5. Vizualizări:**
-    - "Creează un grafic cu [indicator] pentru toate țările"
-    - "Arată-mi un chart cu evoluția [indicator]"
-    
-    **6. Filtrări și sortări:**
-    - "Arată-mi top 5 ani cu cel mai mare [indicator]"
-    - "Filtrează datele pentru [țară] după anul [an]"
-    
-    ### Indicatori disponibili:
-    - **GDP**: PIB per capita
-    - **FDI**: Foreign Direct Investment
-    - **IU**: Internet Users
-    - **MCS**: Mobile Cellular Subscriptions
-    - **PA**: Patent Applications
-    - **EF**: Economic Freedom Index
-    
-    ### Țări disponibile:
-    - Romania
-    - Bulgaria
-    - Turkey
-    - Greece
+    **4. Vizualizări:**
+    - "Creează un grafic cu [indicator]"
     """)
 
-# Information about PandasAI capabilities
 with st.expander("🤖 Despre PandasAI"):
-    st.markdown("""
-    ### Ce este PandasAI?
-    
-    PandasAI este o bibliotecă Python care adaugă capabilități de AI generativ la pandas DataFrames.
-    Permite utilizatorilor să pună întrebări despre datele lor în limbaj natural și să primească răspunsuri
-    sub formă de text, tabele sau vizualizări.
-    
-    ### Capabilități:
-    
-    - **Procesare limbaj natural**: Înțelege întrebări complexe în limbaj natural
-    - **Analiză automată**: Efectuează calcule și analize statistice automat
-    - **Generare vizualizări**: Creează grafice și chart-uri relevante
-    - **Răspunsuri contextuale**: Oferă răspunsuri bazate pe contextul datelor
-    
-    ### Cum funcționează:
-    
-    1. Primește întrebarea ta în limbaj natural
-    2. Analizează structura și conținutul dataset-ului
-    3. Generează cod Python pentru a răspunde la întrebare
-    4. Execută codul și returnează rezultatul
-    5. Creează vizualizări dacă este necesar
-    
-    ### Limitări:
-    
-    - Depinde de calitatea și claritatea întrebării
-    - Poate necesita reformulări pentru întrebări complexe
-    - Limitată de capabilitățile modelului AI folosit
+    st.caption("""
+    PandasAI este o bibliotecă Python care adaugă capabilități de AI generativ la seturi de date (DataFrames).
+    Permite utilizatorilor să pună întrebări despre datele lor în limbaj natural.
     """)
 
 render_footer()

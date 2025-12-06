@@ -121,8 +121,8 @@ example_categories = {
             "description": "Comparație simplă între două entități"
         },
         {
-            "title": "Ranking",
-            "query": "Creează un ranking al țărilor bazat pe Economic Freedom Index în 2023",
+            "title": "Clasament",
+            "query": "Creează un clasament al țărilor bazat pe Economic Freedom Index în 2023",
             "description": "Sortare și clasificare"
         },
         {
@@ -140,12 +140,12 @@ example_categories = {
         },
         {
             "title": "Grafic bare",
-            "query": "Arată un bar chart cu Patent Applications pentru fiecare țară în 2023",
+            "query": "Arată un grafic cu bare cu Patent Applications pentru fiecare țară în 2023",
             "description": "Comparație vizuală"
         },
         {
             "title": "Scatter plot",
-            "query": "Creează un scatter plot între GDP și Internet Users",
+            "query": "Creează un grafic de dispersie (scatter plot) între GDP și Internet Users",
             "description": "Vizualizare relație între variabile"
         }
     ],
@@ -180,9 +180,9 @@ example_categories = {
             "description": "Calcule procentuale"
         },
         {
-            "title": "Z-scores",
-            "query": "Calculează z-scores pentru GDP și identifică valorile extreme",
-            "description": "Normalizare și detecție outliers"
+            "title": "Scorurile Z",
+            "query": "Calculează scorurile Z pentru GDP și identifică valorile extreme",
+            "description": "Normalizare și detecție valori extreme (outliers)"
         }
     ]
 }
@@ -243,157 +243,18 @@ if st.session_state.examples_history:
             
             response = item['response']
             if isinstance(response, str):
-                st.write(response)
+                # Filter out file paths and inf values from response
+                if not response.startswith('/') and not response.startswith('exports/') and response.lower() != 'inf':
+                    st.write(response)
             elif isinstance(response, (pd.DataFrame, pd.Series)):
                 st.dataframe(response, use_container_width=True)
             else:
-                st.write(str(response))
+                response_str = str(response)
+                if not response_str.startswith('/') and not response_str.startswith('exports/') and response_str.lower() != 'inf':
+                    st.write(response_str)
             
             # Check for charts
             chart_path = "exports/charts/temp_chart.png"
             if os.path.exists(chart_path):
                 st.image(chart_path)
-
-# Custom query section
-st.markdown("---")
-st.header("✍️ Testează propria ta întrebare")
-
-custom_query = st.text_area(
-    "Scrie o întrebare personalizată:",
-    placeholder="Ex: Care este diferența medie dintre GDP-ul Greciei și al Turciei în ultimii 10 ani?",
-    height=100
-)
-
-if st.button("🚀 Execută întrebare personalizată", type="primary"):
-    if custom_query:
-        with st.spinner("PandasAI procesează întrebarea ta..."):
-            try:
-                # Delete old chart before processing
-                chart_path = "exports/charts/temp_chart.png"
-                if os.path.exists(chart_path):
-                    try:
-                        os.remove(chart_path)
-                    except:
-                        pass
-                
-                response = st.session_state.agent_examples.chat(custom_query)
-                
-                st.subheader("📊 Rezultat:")
-                if isinstance(response, str):
-                    st.write(response)
-                elif isinstance(response, (pd.DataFrame, pd.Series)):
-                    st.dataframe(response, use_container_width=True)
-                else:
-                    st.write(str(response))
-                
-                # Check for newly generated charts
-                if os.path.exists(chart_path):
-                    st.image(chart_path)
-                
-                # Add to history
-                st.session_state.examples_history.append({
-                    "category": "✍️ Custom",
-                    "title": "Întrebare personalizată",
-                    "query": custom_query,
-                    "response": response
-                })
-            
-            except Exception as e:
-                st.error(f"❌ Eroare: {str(e)}")
-    else:
-        st.warning("Te rog introdu o întrebare.")
-
-# Tips section
-st.markdown("---")
-st.subheader("💡 Sfaturi pentru întrebări eficiente")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("""
-    ### ✅ Bune practici:
-    
-    - **Fii specific**: "Media GDP pentru România" în loc de "GDP România"
-    - **Specifică perioada**: "între 2010 și 2020" când este relevant
-    - **Cere vizualizări**: "Creează un grafic..." pentru chart-uri
-    - **Folosește termeni clari**: "compară", "calculează", "arată"
-    - **Grupează logic**: "pentru fiecare țară" când vrei agregări
-    """)
-
-with col2:
-    st.markdown("""
-    ### ❌ De evitat:
-    
-    - Întrebări vagi: "Spune-mi despre date"
-    - Prea multe cerințe: "Calculează totul și arată toate graficele"
-    - Termeni ambigui: "cel mai bun" fără context
-    - Întrebări fără context: "Care este valoarea?" (a cărei valori?)
-    - Presupuneri: "Arată trendul" (care trend?)
-    """)
-
-# Learning section
-st.markdown("---")
-st.subheader("📚 Învață mai mult despre PandasAI")
-
-with st.expander("🎓 Concepte cheie"):
-    st.markdown("""
-    ### Cum funcționează PandasAI:
-    
-    1. **Procesare limbaj natural**
-       - Primește întrebarea ta în text
-       - Analizează intenția și contextul
-       - Identifică entitățile relevante (țări, indicatori, perioade)
-    
-    2. **Generare cod**
-       - Creează cod Python/Pandas automat
-       - Optimizează pentru performanță
-       - Gestionează edge cases
-    
-    3. **Execuție și validare**
-       - Rulează codul generat
-       - Validează rezultatele
-       - Gestionează erorile
-    
-    4. **Formatare răspuns**
-       - Prezintă rezultatul într-un format ușor de înțeles
-       - Generează vizualizări când este relevant
-       - Oferă context și explicații
-    
-    ### Tipuri de operații suportate:
-    
-    - **Agregări**: sum, mean, median, count, min, max
-    - **Filtrări**: where, filter, select
-    - **Sortări**: sort, rank, top N
-    - **Grupări**: group by, pivot
-    - **Calcule**: arithmetic, percentages, ratios
-    - **Statistici**: std, var, correlation, percentiles
-    - **Vizualizări**: line, bar, scatter, heatmap
-    - **Transformări**: normalize, scale, encode
-    """)
-
-with st.expander("🔧 Debugging și troubleshooting"):
-    st.markdown("""
-    ### Dacă întâmpini probleme:
-    
-    1. **Reformulează întrebarea**
-       - Încearcă o formulare mai simplă
-       - Împarte întrebarea complexă în mai multe întrebări simple
-    
-    2. **Verifică datele**
-       - Asigură-te că numele coloanelor sunt corecte
-       - Verifică că valorile există în dataset
-    
-    3. **Fii mai explicit**
-       - Specifică exact ce vrei să vezi
-       - Menționează coloanele și condițiile clar
-    
-    4. **Testează incremental**
-       - Începe cu o întrebare simplă
-       - Adaugă complexitate treptat
-    
-    5. **Verifică API key**
-       - Asigură-te că API key-ul este valid
-       - Verifică că ai credit disponibil
-    """)
-
 render_footer()

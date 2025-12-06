@@ -1,4 +1,6 @@
 import os
+import time
+import random
 from openai import OpenAI
 try:
     from pandasai import Agent
@@ -7,9 +9,9 @@ except ImportError:
     from pandasai import SmartDataframe
     from pandasai.llm.base import BaseOpenAI
 
-# Custom OpenRouter LLM class for PandasAI
-class OpenRouterLLM(BaseOpenAI):
-    def __init__(self, api_token, model="meta-llama/llama-3.3-70b-instruct:free"):
+# Custom Groq LLM class for PandasAI
+class GroqLLM(BaseOpenAI):
+    def __init__(self, api_token, model="llama-3.3-70b-versatile"):
         # Initialize parent class without parameters
         super().__init__()
         
@@ -19,9 +21,9 @@ class OpenRouterLLM(BaseOpenAI):
         self._is_chat_model = True
         self._max_retries = 3
         
-        # Create OpenRouter client
+        # Create Groq client (using OpenAI compatible client)
         self.openai_client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
+            base_url="https://api.groq.com/openai/v1",
             api_key=api_token,
         )
         
@@ -37,48 +39,71 @@ class OpenRouterLLM(BaseOpenAI):
                 max_tokens = kwargs.get('max_tokens', 1000)
                 temperature = kwargs.get('temperature', 0)
                 
+                max_retries = 5
+                base_delay = 2
+                
+                for attempt in range(max_retries):
+                    try:
+                        response = self.openai_client.chat.completions.create(
+                            extra_headers={
+                                "HTTP-Referer": "https://pandasai-app.com",
+                                "X-Title": "PandasAI App",
+                            },
+                            model=self.model,
+                            messages=messages,
+                            max_tokens=max_tokens,
+                            temperature=temperature
+                        )
+                        return response
+                    except Exception as e:
+                        if "429" in str(e) and attempt < max_retries - 1:
+                            delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                            print(f"Rate limit hit. Retrying in {delay:.2f}s...")
+                            time.sleep(delay)
+                        else:
+                            raise e
+        
+        self.client = MockClient(self.openai_client, self.model)
+    
+    def _generate_text(self, prompt: str) -> str:
+        max_retries = 5
+        base_delay = 2
+        
+        for attempt in range(max_retries):
+            try:
                 response = self.openai_client.chat.completions.create(
                     extra_headers={
                         "HTTP-Referer": "https://pandasai-app.com",
                         "X-Title": "PandasAI App",
                     },
                     model=self.model,
-                    messages=messages,
-                    max_tokens=max_tokens,
-                    temperature=temperature
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ],
+                    max_tokens=4000,
+                    temperature=0
                 )
-                return response
-        
-        self.client = MockClient(self.openai_client, self.model)
-    
-    def _generate_text(self, prompt: str) -> str:
-        try:
-            response = self.openai_client.chat.completions.create(
-                extra_headers={
-                    "HTTP-Referer": "https://pandasai-app.com",
-                    "X-Title": "PandasAI App",
-                },
-                model=self.model,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                max_tokens=1000,
-                temperature=0
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            raise Exception(f"OpenRouter API error: {str(e)}")
+                return response.choices[0].message.content
+            except Exception as e:
+                if "429" in str(e) and attempt < max_retries - 1:
+                    delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                    print(f"Rate limit hit. Retrying in {delay:.2f}s...")
+                    time.sleep(delay)
+                elif attempt == max_retries - 1:
+                    raise Exception(f"Groq API error: {str(e)}")
+                else:
+                    raise Exception(f"Groq API error: {str(e)}")
     
     @property
     def type(self) -> str:
-        return "openrouter"
+        return "groq"
 
-def get_agent(df, api_key, model="x-ai/grok-4.1-fast:free"):
+def get_agent(df, api_key, model="llama-3.3-70b-versatile"):
     """Create and return a PandasAI agent"""
-    llm = OpenRouterLLM(
+    llm = GroqLLM(
         api_token=api_key,
         model=model
     )
@@ -87,24 +112,25 @@ def get_agent(df, api_key, model="x-ai/grok-4.1-fast:free"):
     agent = Agent(df, config={
         "llm": llm, 
         "verbose": True,
-        "enable_cache": False
+        "enable_cache": False,
+        "custom_whitelisted_dependencies": ["requests"]
     })
     return agent
 
-def test_openrouter_connection(api_key):
-    """Test OpenRouter connection"""
+def test_groq_connection(api_key):
+    """Test Groq connection"""
     try:
-        openrouter_client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
+        groq_client = OpenAI(
+            base_url="https://api.groq.com/openai/v1",
             api_key=api_key,
         )
         
-        test_completion = openrouter_client.chat.completions.create(
+        test_completion = groq_client.chat.completions.create(
             extra_headers={
                 "HTTP-Referer": "https://pandasai-app.com",
                 "X-Title": "PandasAI App",
             },
-            model="x-ai/grok-4.1-fast:free",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {
                     "role": "user",

@@ -59,10 +59,10 @@ PandasAI/
 - **Multi-Page Application**: Streamlit's native multi-page structure
 - **Session State Management**: Centralized state in `st.session_state`
 - **Modular Design**: Utilities separated into dedicated modules
-- **API-First**: External LLM via OpenRouter API (not local models)
+- **API-First**: External LLM via Groq API (not local models)
 
 ### Key Architectural Decisions
-1. **OpenRouter Integration**: Uses OpenRouter API for LLM access (NOT llama.cpp or local models)
+1. **Groq Integration**: Uses Groq API for ultra-fast LLM access
 2. **Stateless Agent Creation**: PandasAI agents created per session with cache disabled
 3. **Chart Management**: Temporary charts with unique timestamps for history
 4. **Authentication Flow**: API key validation before page access
@@ -105,7 +105,7 @@ from utils.data_loader import load_data
 ### Session State Variables
 ```python
 # Authentication
-st.session_state.api_key          # OpenRouter API key
+st.session_state.api_key          # Groq API key
 st.session_state.api_key_valid    # Boolean validation status
 st.session_state.selected_model   # Current LLM model ID
 
@@ -128,28 +128,29 @@ def init_session_state():
     if "api_key_valid" not in st.session_state:
         st.session_state.api_key_valid = False
     if "selected_model" not in st.session_state:
-        st.session_state.selected_model = "qwen/qwen-2.5-72b-instruct:free"
+        st.session_state.selected_model = "llama-3.3-70b-versatile"
 ```
 
-## LLM Integration (OpenRouter)
+## LLM Integration (Groq)
 
 ### Custom LLM Class
 ```python
 class OpenRouterLLM(BaseOpenAI):
-    """Custom OpenRouter LLM for PandasAI integration"""
+    """Custom Groq LLM for PandasAI integration"""
 ```
 
 **Key Features**:
 - Inherits from `pandasai.llm.base.BaseOpenAI`
-- Uses OpenAI client with custom base URL
+- Uses OpenAI client with Groq base URL
 - Implements `_generate_text()` method
 - Provides mock client for PandasAI compatibility
 
 ### Available Models
-1. **Qwen 2.5 72B Instruct** (default): `qwen/qwen-2.5-72b-instruct:free`
-2. **Meta Llama 3.3 70B Instruct**: `meta-llama/llama-3.3-70b-instruct:free`
+1. **Llama 3.3 70B Versatile (Groq)** (default): `llama-3.3-70b-versatile`
+2. **Llama 3 70B (Groq)**: `llama3-70b-8192`
+3. **Mixtral 8x7B (Groq)**: `mixtral-8x7b-32768`
 
-**IMPORTANT**: These are API-accessed models via OpenRouter, NOT local llama.cpp models
+**IMPORTANT**: These are API-accessed models via Groq, NOT local llama.cpp models
 
 ### Agent Configuration
 ```python
@@ -231,7 +232,7 @@ COLUMN_INFO = {
 
 - No formal test framework currently implemented
 - Manual testing through Streamlit interface
-- API connection tested via `test_openrouter_connection()`
+- API connection tested via `test_groq_connection()`
 
 ## Build & Development Workflow
 
@@ -257,7 +258,7 @@ streamlit run app.py
 - **streamlit**: Web application framework, multi-page support
 - **pandasai**: AI-powered data analysis, natural language queries
 - **pandas**: Data manipulation, DataFrame operations
-- **openai**: API client for OpenRouter LLM access
+- **openai**: API client for Groq LLM access
 
 ### Visualization
 - **plotly**: Interactive charts (line, bar, scatter, heatmap)
@@ -306,8 +307,8 @@ api_key = require_api_key()  # Stops execution if not authenticated
 ```python
 # User selects model in sidebar
 model_options = {
-    "Qwen2.5 72B Instruct": "qwen/qwen-2.5-72b-instruct:free",
-    "Meta: Llama 3.3 70B Instruct": "meta-llama/llama-3.3-70b-instruct:free"
+    "Llama 3.3 70B Versatile (Groq)": "llama-3.3-70b-versatile",
+    "Llama 3 70B (Groq)": "llama3-70b-8192"
 }
 
 # On model change, clear all agents to force recreation
@@ -323,6 +324,7 @@ if new_model != st.session_state.selected_model:
 
 ### When Modifying utils/config.py
 - Maintain `OpenRouterLLM` class structure
+- Keep `BaseOpenAI` inheritance
 - Keep `BaseOpenAI` inheritance
 - Preserve mock client pattern for PandasAI compatibility
 - Update model list in both config.py and auth.py
@@ -351,10 +353,10 @@ if new_model != st.session_state.selected_model:
 - Queries via `agent.chat(prompt)`
 - Responses: str, DataFrame, Series, or chart files
 
-### PandasAI ↔ OpenRouter
+### PandasAI ↔ Groq
 - Custom `OpenRouterLLM` class bridges the gap
 - Implements PandasAI's `BaseOpenAI` interface
-- Uses OpenAI client with OpenRouter base URL
+- Uses OpenAI client with Groq base URL
 
 ### Session State ↔ Pages
 - Shared authentication state across pages
@@ -389,7 +391,7 @@ error_msg = str(e).encode('utf-8', errors='ignore').decode('utf-8')
 
 ## Important Notes
 
-1. **NO llama.cpp Integration**: Despite model names containing "llama", this project uses OpenRouter API, NOT local llama.cpp library
+1. **NO llama.cpp Integration**: Despite model names containing "llama", this project uses Groq API, NOT local llama.cpp library
 2. **Cache Disabled**: PandasAI cache disabled to prevent DuckDB lock issues in multi-session Streamlit environment
 3. **Stateless Agents**: Agents recreated per session, not persisted
 4. **Chart Cleanup**: Old charts deleted before new queries to prevent accumulation

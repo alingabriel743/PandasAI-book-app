@@ -24,7 +24,7 @@ render_header(
 
 st.info("""
 **💡 Notă:** Această pagină oferă o abordare **structurată** a analizei, ghidându-te prin categorii specifice. 
-Pentru conversații libere, folosește pagina **Chat**. Pentru rapoarte complete autonome, încearcă noul **Agent de Raportare**.
+Pentru conversații libere, folosește pagina **Chat**. Pentru rapoarte complete autonome, încearcă **Agent de Raportare**.
 """)
 
 # Require API key authentication
@@ -75,44 +75,47 @@ if analysis_category == "Statistici descriptive":
         "Care este coeficientul de variație pentru FDI în fiecare țară?"
     ]
     
-    col1, col2 = st.columns([2, 1])
+    selected_query = st.selectbox(
+        "Întrebări predefinite:",
+        [""] + predefined_queries,
+        key="stats_query"
+    )
     
-    with col1:
-        selected_query = st.selectbox(
-            "Întrebări predefinite:",
-            [""] + predefined_queries,
-            key="stats_query"
-        )
-    
-    with col2:
-        if st.button("🔍 Analizează", key="stats_btn", type="primary"):
-            if selected_query:
-                with st.spinner("PandasAI analizează datele..."):
-                    try:
-                        # Delete old chart before processing
-                        chart_path = "exports/charts/temp_chart.png"
-                        if os.path.exists(chart_path):
-                            try:
-                                os.remove(chart_path)
-                            except:
-                                pass
-                        
-                        response = st.session_state.agent_advanced.chat(selected_query)
-                        
+    if st.button("🔍 Analizează", key="stats_btn", type="primary"):
+        if selected_query:
+            with st.spinner("PandasAI analizează datele..."):
+                try:
+                    # Delete old chart before processing
+                    chart_path = "exports/charts/temp_chart.png"
+                    if os.path.exists(chart_path):
+                        try:
+                            os.remove(chart_path)
+                        except:
+                            pass
+                    
+                    response = st.session_state.agent_advanced.chat(selected_query)
+                    
+                    st.markdown("---")
+                    col_result, _ = st.columns([1, 1])
+                    with col_result:
                         st.subheader("📊 Rezultat:")
                         if isinstance(response, str):
-                            st.write(response)
+                            # Filter out file paths from response
+                            if not response.startswith('/') and not response.startswith('exports/'):
+                                st.write(response)
                         elif isinstance(response, (pd.DataFrame, pd.Series)):
-                            st.dataframe(response, use_container_width=True)
+                            st.dataframe(response)
                         else:
-                            st.write(str(response))
-                        
-                        # Check for newly generated charts
-                        if os.path.exists(chart_path):
-                            st.image(chart_path)
+                            response_str = str(response)
+                            if not response_str.startswith('/') and not response_str.startswith('exports/'):
+                                st.write(response_str)
                     
-                    except Exception as e:
-                        st.error(f"Eroare: {str(e)}")
+                    # Check for newly generated charts
+                    if os.path.exists(chart_path):
+                        st.image(chart_path)
+                
+                except Exception as e:
+                    st.error(f"Eroare: {str(e)}")
 
 elif analysis_category == "Corelații și relații":
     st.subheader("🔗 Analiză corelații cu PandasAI")
@@ -159,11 +162,15 @@ elif analysis_category == "Corelații și relații":
                     
                     st.subheader("📊 Rezultat:")
                     if isinstance(response, str):
-                        st.write(response)
+                        # Filter out file paths from response
+                        if not response.startswith('/') and not response.startswith('exports/'):
+                            st.write(response)
                     elif isinstance(response, (pd.DataFrame, pd.Series)):
                         st.dataframe(response, use_container_width=True)
                     else:
-                        st.write(str(response))
+                        response_str = str(response)
+                        if not response_str.startswith('/') and not response_str.startswith('exports/'):
+                            st.write(response_str)
                     
                     # Check for newly generated charts
                     if os.path.exists(chart_path):
@@ -217,11 +224,15 @@ elif analysis_category == "Analiză comparativă":
                     
                     st.subheader("📊 Rezultat:")
                     if isinstance(response, str):
-                        st.write(response)
+                        # Filter out file paths from response
+                        if not response.startswith('/') and not response.startswith('exports/'):
+                            st.write(response)
                     elif isinstance(response, (pd.DataFrame, pd.Series)):
                         st.dataframe(response, use_container_width=True)
                     else:
-                        st.write(str(response))
+                        response_str = str(response)
+                        if not response_str.startswith('/') and not response_str.startswith('exports/'):
+                            st.write(response_str)
                     
                     # Check for newly generated charts
                     if os.path.exists(chart_path):
@@ -275,11 +286,15 @@ elif analysis_category == "Predicții și tendințe":
                     
                     st.subheader("📊 Rezultat:")
                     if isinstance(response, str):
-                        st.write(response)
+                        # Filter out file paths from response
+                        if not response.startswith('/') and not response.startswith('exports/'):
+                            st.write(response)
                     elif isinstance(response, (pd.DataFrame, pd.Series)):
                         st.dataframe(response, use_container_width=True)
                     else:
-                        st.write(str(response))
+                        response_str = str(response)
+                        if not response_str.startswith('/') and not response_str.startswith('exports/'):
+                            st.write(response_str)
                     
                     # Check for newly generated charts
                     if os.path.exists(chart_path):
@@ -334,11 +349,15 @@ else:  # Analiză complexă
                     
                     st.subheader("📊 Rezultat:")
                     if isinstance(response, str):
-                        st.write(response)
+                        # Filter out file paths from response
+                        if not response.startswith('/') and not response.startswith('exports/'):
+                            st.write(response)
                     elif isinstance(response, (pd.DataFrame, pd.Series)):
                         st.dataframe(response, use_container_width=True)
                     else:
-                        st.write(str(response))
+                        response_str = str(response)
+                        if not response_str.startswith('/') and not response_str.startswith('exports/'):
+                            st.write(response_str)
                     
                     # Check for newly generated charts
                     if os.path.exists(chart_path):
@@ -358,7 +377,7 @@ with st.expander("🎯 Ce poate face PandasAI?"):
     1. **Analiză statistică automată**
        - Calculează statistici descriptive complexe
        - Identifică distribuții și pattern-uri
-       - Detectează outliers și anomalii
+       - Detectează valori extreme (outliers) și anomalii
     
     2. **Analiză relațională**
        - Calculează corelații între variabile
@@ -368,7 +387,7 @@ with st.expander("🎯 Ce poate face PandasAI?"):
     3. **Comparații inteligente**
        - Compară între grupuri (țări, perioade)
        - Identifică diferențe semnificative
-       - Rankează și clasifică
+       - Ierarhizează și clasifică
     
     4. **Analiză temporală**
        - Identifică tendințe și pattern-uri
@@ -397,18 +416,18 @@ with st.expander("🎯 Ce poate face PandasAI?"):
 with st.expander("📚 Exemple de întrebări avansate"):
     st.markdown("""
     ### Întrebări statistice:
-    - "Calculează skewness și kurtosis pentru GDP în fiecare țară"
-    - "Care este intervalul de confidență 95% pentru media FDI?"
+    - "Calculează asimetria (skewness) și boltirea (kurtosis) pentru GDP în fiecare țară"
+    - "Care este intervalul de încredere 95% pentru media FDI?"
     - "Efectuează un test de normalitate pentru Internet Users"
     
     ### Întrebări de corelație:
     - "Care perechi de variabile au corelația cea mai puternică?"
-    - "Există colinearitate între indicatori?"
+    - "Există coliniaritate între indicatori?"
     - "Calculează corelația parțială dintre GDP și IU controlând pentru Year"
     
     ### Întrebări comparative:
     - "Care țară a avut cea mai volatilă evoluție economică?"
-    - "Compară performanța relativă a țărilor folosind z-scores"
+    - "Compară performanța relativă a țărilor folosind scoruri Z (z-scores)"
     - "Identifică țara cu cea mai echilibrată dezvoltare"
     
     ### Întrebări temporale:
